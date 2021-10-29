@@ -40,8 +40,7 @@
                         
                     </div>
                     <div class="col-6 m-3" id="infoPersonaje">
-                        <!-- <h3>Personaje: {this.state.personajeSeleccionado.nombre}</h3>
-                        <img src={this.state.personajeSeleccionado.imagen} height="200px"/> -->
+
                     </div>
                 </div>
             </div>
@@ -87,6 +86,7 @@
                 "success": function(data) {
                     var h = $("<h3>", {"text":"Personaje: "+data.nombre});
                     var img = $("<img>", {"src":data.imagen, "height":"200px"});
+                    $("#infoPersonaje").text("");
                     $("#infoPersonaje").append(h, img);
                 }
             })
@@ -101,6 +101,7 @@
                 "success": function(data) {
                     var h = $("<h3>", {"text":"Serie: "+data.nombre});
                     var img = $("<img>", {"src":data.imagen, "height":"200px"});
+                    $("#infoSerie").text("");
                     $("#infoSerie").append(h, img);
                 }
             })
