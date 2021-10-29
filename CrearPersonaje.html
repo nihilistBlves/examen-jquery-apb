@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personajes</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="menu"></div>
+        <div class="row m-3 justify-content-center">
+            <div class="col-6 text-center">
+                <h1>Crear nuevo personaje</h1>
+                <form>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" required class="form-control text-center" id="nombre" placeholder="Introduzca un nombre de personaje" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen" class="form-label">Imagen</label>
+                        <input type="text" required class="form-control text-center" id="imagen" placeholder="Introduzca el enlace de una imagen" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="selectSeries" class="form-label">Serie</label>
+                        <select class="form-select" id="selectSeries" >
+                            
+                        </select>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-5">
+                            <button type="button" id="buttonCrearPersonaje" class="btn btn-success">Crear personaje</button>
+                        </div>
+                        <div class="col-4">
+                            <a href="./Home.html" role="button" class="btn btn-secondary">Volver</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.js"></script>
+    <script src="./bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./cargarMenuConSeries.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu").load("./Menu.html");
+            cargarMenu();
+            cargarSeries();
+            $("#buttonCrearPersonaje").click(function() {
+                crearPersonaje();
+            })
+        })
+
+        function crearPersonaje() {
+            var request = "/api/personajes";
+            var personaje = new Object();
+            personaje.idPersonaje = 1;
+            personaje.nombre = $("#nombre").val();
+            personaje.imagen = $("#imagen").val();
+            personaje.idSerie = parseInt($("#selectSeries").val());
+            var data = JSON.stringify(personaje);
+            $.ajax({
+                "url": url + request,
+                "method": "POST",
+                "data": data,
+                "contentType": "application/json",
+                "success": function(data) {
+                    window.location.replace("./Home.html");
+                }
+            })
+        }
+
+        function cargarSeries() {
+            var request = "/api/series";
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    $.each(data, function(key, serie) {
+                        var option = $("<option>", {"value":serie.idSerie, "text":serie.nombre});
+                        $("#selectSeries").append(option);
+                    })
+                }
+            })
+        }
+    </script>
+</body>
+</html>

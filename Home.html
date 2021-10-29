@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="menu"></div>
+        <div class="row m-3 justify-content-center">
+            <div class="col-6 text-center">
+                <h1>Home</h1>
+                <hr/>
+                <h2>Bienvenido al examen de Alejo Pérez en REACT</h2>
+                <hr/>
+                <img src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/netflix-logo-rgb-1634125225.jpeg" width="600px"/>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.js"></script>
+    <script src="./bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./cargarMenuConSeries.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu").load("./Menu.html");
+            cargarMenu();
+        })
+
+    </script>
+</body>
+</html>

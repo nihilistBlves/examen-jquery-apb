@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personajes</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="menu"></div>
+        <div class="row m-3 justify-content-center">
+            <div class="col-6 text-center" id="componente">
+                <div class="row justify-content-center">
+                    <div class="col-4 text-center">
+                        <h1>Ver personajes</h1>
+                    </div>
+                    <div class="col-4 mt-2 text-center">
+                        <a id="buttonVolver" href="#" role="button" class="btn btn-secondary">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.js"></script>
+    <script src="./bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./cargarMenuConSeries.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu").load("./Menu.html");
+            cargarMenu();
+            cargarPersonajes();
+            $("#buttonVolver").attr("href", "./VerSerie.html?idSerie="+recogerIdSerie());
+        })
+
+        function cargarPersonajes() {
+            var idSerie = recogerIdSerie();
+            var request = "/api/Series/PersonajesSerie/" + idSerie;
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    var table = $("<table>", {"class":"table table-striped"});
+                    var thead = $("<thead>");
+                    var trHead = $("<tr>");
+                    var thId = $("<th>", {"text":"ID"});
+                    var thNombre = $("<th>", {"text":"NOMBRE"});
+                    var thImagen = $("<th>", {"text":"IMAGEN"});
+                    trHead.append(thId, thNombre, thImagen);
+                    thead.append(trHead);
+                    table.append(thead);
+                    var tbody = $("<tbody>");
+                   $.each(data, function(key, personaje) {
+                        var trBody = $("<tr>");
+                        var tdId = $("<td>", {"text":personaje.idPersonaje});
+                        var tdNombre = $("<td>", {"text":personaje.nombre});
+                        var tdImagen = $("<td>");
+                        var img = $("<img>", {"src":personaje.imagen, "height":"100px"});
+                        tdImagen.append(img);
+                        trBody.append(tdId, tdNombre, tdImagen);
+                        tbody.append(trBody);
+                   });
+                   table.append(tbody);
+                   $("#componente").append(table);
+                }
+            })
+        }
+
+        function recogerIdSerie() {
+            let searchParams = new URLSearchParams(window.location.search);
+            return parseInt(searchParams.get("idSerie"));
+        }
+    </script>
+</body>
+</html>

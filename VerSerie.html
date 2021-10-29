@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="menu"></div>
+        <div class="row m-3 justify-content-center">
+            <div class="col-6 text-center" id="componente">
+                <h1>Ver serie</h1>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.js"></script>
+    <script src="./bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./cargarMenuConSeries.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu").load("./Menu.html");
+            cargarMenu();
+            cargarSerie();
+        })
+        
+        function cargarSerie() {
+            var idSerie = recogerIdSerie();
+            var request = "/api/series/" + idSerie;
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    var divCard = $("<div>", {"class":"card text-center"});
+                    var img = $("<img>", {"class":"card-img-top mx-auto", "src":data.imagen, "style":"height:400px;width:400px"});
+                    var divBody = $("<div>", {"class":"card-body"});
+                    var nombre = $("<h3>", {"class":"card-text", "text":data.nombre});
+                    var puntuacion = $("<p>", {"class":"card-text", "text":"Puntuacuón IMDB: " + data.puntuacion});
+                    var boton = $("<a>", {"class":"btn btn-success", "role":"button", "href":"./VerPersonajes.html?idSerie="+data.idSerie, "text":"Ver personajes"});
+                    divBody.append(nombre, puntuacion, boton);
+                    divCard.append(img, divBody);
+                   $("#componente").append(divCard);
+                }
+            })
+        }
+
+        function recogerIdSerie() {
+            let searchParams = new URLSearchParams(window.location.search);
+            return parseInt(searchParams.get("idSerie"));
+        }
+    </script>
+</body>
+</html>

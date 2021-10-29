@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personajes</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="menu"></div>
+        <div class="row m-3 justify-content-center">
+            <div class="col-6 text-center">
+                <h1>Cambiar personaje de serie</h1>
+                <form>
+                    <div class="mb-3">
+                        <label for="selectPersonajes" class="form-label">Personaje</label>
+                        <select class="form-select" id="selectPersonajes" >
+                            
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="selectSeries" class="form-label">Serie</label>
+                        <select class="form-select" id="selectSeries" >
+                            
+                        </select>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-5">
+                            <button type="button" id="buttonModificarPersonaje" class="btn btn-success">Guardar cambios</button>
+                        </div>
+                        <div class="col-4">
+                            <a href="./Home.html" role="button" class="btn btn-secondary">Volver</a>
+                        </div>
+                    </div>
+                </form>
+                <div class="row m-3 justify-content-center">
+                    <div class="col-6 m-3" id="infoSerie">
+                        
+                    </div>
+                    <div class="col-6 m-3" id="infoPersonaje">
+                        <!-- <h3>Personaje: {this.state.personajeSeleccionado.nombre}</h3>
+                        <img src={this.state.personajeSeleccionado.imagen} height="200px"/> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="jquery-3.6.0.js"></script>
+    <script src="./bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./cargarMenuConSeries.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#menu").load("./Menu.html");
+            cargarMenu();
+            cargarPersonajes();
+            cargarSeries();
+            $("#buttonModificarPersonaje").click(function() {
+                modificarPersonaje();
+            });
+            $("#selectPersonajes").change(function() {
+                cargarInfoPersonaje();
+            });
+            $("#selectSeries").change(function() {
+                cargarInfoSerie();
+            });
+        })
+
+        function modificarPersonaje() {
+            var request = "/api/Personajes/" + $("#selectPersonajes").val() + "/" + $("#selectSeries").val();
+            $.ajax({
+                "url": url + request,
+                "method": "PUT",
+                "success": function(data) {
+                    window.location.replace("./Home.html");
+                }
+            })
+        }
+        
+        function cargarInfoPersonaje() {
+            var request = "/api/personajes/" + $("#selectPersonajes").val();
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    var h = $("<h3>", {"text":"Personaje: "+data.nombre});
+                    var img = $("<img>", {"src":data.imagen, "height":"200px"});
+                    $("#infoPersonaje").append(h, img);
+                }
+            })
+        }
+
+        function cargarInfoSerie() {
+            var request = "/api/series/" + $("#selectSeries").val();
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    var h = $("<h3>", {"text":"Serie: "+data.nombre});
+                    var img = $("<img>", {"src":data.imagen, "height":"200px"});
+                    $("#infoSerie").append(h, img);
+                }
+            })
+        }
+
+        function cargarPersonajes() {
+            var request = "/api/personajes";
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    $.each(data, function(key, personaje) {
+                        var option = $("<option>", {"value":personaje.idPersonaje, "text":personaje.nombre});
+                        $("#selectPersonajes").append(option);
+                    })
+                }
+            })
+        }
+
+        function cargarSeries() {
+            var request = "/api/series";
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                "success": function(data) {
+                    $.each(data, function(key, serie) {
+                        var option = $("<option>", {"value":serie.idSerie, "text":serie.nombre});
+                        $("#selectSeries").append(option);
+                    })
+                }
+            })
+        }
+    </script>
+</body>
+</html>
